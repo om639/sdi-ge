@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact name="sdi-ge:release">
+    <output-path>$PROJECT_DIR$/out/artifacts/sdi_ge_release</output-path>
+    <root id="root">
+      <element id="artifact" artifact-name="sdi-ge:jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/map.tmx" />
+      <element id="file-copy" path="$PROJECT_DIR$/Tileset.png" />
+    </root>
+  </artifact>
+</component>
