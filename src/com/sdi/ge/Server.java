@@ -17,11 +17,23 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 public class Server {
 
     /**
+     * The default port to listen on.
+     */
+    private static final int DEFAULT_PORT = 5577;
+
+    /**
+     * The default number of players to use.
+     */
+    private static final int DEFAULT_NUM_PLAYERS = 2;
+
+    /**
      * Port to run the server on.
      */
     private int port;
 
-
+    /**
+     * The game engine in which the game loop runs.
+     */
     private final Engine engine;
 
     /**
@@ -40,10 +52,10 @@ public class Server {
      *
      * @param port the port to listen for connections on
      */
-    public Server(int port) {
+    public Server(int port, int numPlayers) {
         this.port = port;
 
-        engine = new Engine(this);
+        engine = new Engine(this, numPlayers);
 
         connectionHandler = new ConnectionHandler(engine);
         bossGroup = new NioEventLoopGroup();
@@ -95,13 +107,19 @@ public class Server {
         System.out.println("SDI Multiplayer Alpha Server");
         System.out.println("Created by Oliver McClellan");
 
-        int port;
-        if (args.length > 0) {
+        int port = DEFAULT_PORT;
+        int numPlayers = DEFAULT_NUM_PLAYERS;
+
+        // Get port from command line parameters.
+        if (args.length >= 1) {
             port = Integer.parseInt(args[0]);
-        } else {
-            port = 5577;
+
+            // Get number of players from command line parameters.
+            if (args.length >= 2) {
+                numPlayers = Integer.parseInt(args[1]);
+            }
         }
 
-        new Server(port).run();
+        new Server(port, numPlayers).run();
     }
 }

@@ -25,14 +25,14 @@ public class Engine implements Runnable {
     private static final long SLEEP_TIME = 1000 / 60;
 
     /**
-     * The number of players required to start the game.
-     */
-    public static final int NUM_PLAYERS = 2;
-
-    /**
      * The parent of this Engine.
      */
     private Server parent;
+
+    /**
+     * The number of players allowed in the server at once.
+     */
+    private int numPlayers;
 
     /**
      * Executor service for the game loop.
@@ -59,8 +59,9 @@ public class Engine implements Runnable {
      */
     private Deque<OutboundPacket> outbound = new LinkedList<>();
 
-    public Engine(Server parent) {
+    public Engine(Server parent, int numPlayers) {
         this.parent = parent;
+        this.numPlayers = numPlayers;
 
         gameService = Executors.newSingleThreadExecutor();
 
@@ -73,11 +74,11 @@ public class Engine implements Runnable {
     }
 
     public boolean playerConnected(Channel channel) {
-        if (players.size() < NUM_PLAYERS) {
+        if (players.size() < numPlayers) {
             players.add(channel);
-            outbound.addFirst(new WaitingOutboundPacket(NUM_PLAYERS - players.size()));
+            outbound.addFirst(new WaitingOutboundPacket(numPlayers - players.size()));
 
-            if (players.size() == NUM_PLAYERS)
+            if (players.size() == numPlayers)
                 setup();
 
             return true;
